@@ -10,3 +10,4 @@ path = "src/lib/mod.rs"
 
 [dependencies]
 winit = "*"
+nalgebra = "*"
