@@ -9,5 +9,5 @@ path = "src/lib/mod.rs"
 
 
 [dependencies]
-winit = "*"
-nalgebra = "*"
+minifb = "0.28"
+glam = "*"
