@@ -12,7 +12,7 @@ fn plot_line_low(b: &mut Buffer, (x0, y0): (u32, u32), (x1, y1): (u32, u32), col
     let mut y = y0 as i32;
 
     for x in x0..x1 {
-        b.fill_pixel((x as i32, y), color);
+        b.try_fill_pixel((x as i32, y), color);
         if d > 0 {
             y = y + yi;
             d = d + (2 * (dy - dx))
@@ -34,7 +34,7 @@ fn plot_line_high(b: &mut Buffer, (x0, y0): (u32, u32), (x1, y1): (u32, u32), co
     let mut x = x0 as i32;
 
     for y in y0..y1 {
-        b.fill_pixel((x, y as i32), color);
+        b.try_fill_pixel((x, y as i32), color);
         if d > 0 {
             x = x + xi;
             d = d + (2 * (dx - dy))
