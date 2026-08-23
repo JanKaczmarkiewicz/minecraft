@@ -1,4 +1,5 @@
 pub mod buffer;
+pub mod color;
 pub mod cppport;
 pub mod cube_lines;
 pub mod objects;

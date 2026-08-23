@@ -3,13 +3,8 @@ use lib::{buffer::Buffer, objects::sphere::Sphere, tracerays::trace_rays};
 
 use minifb::{Key, Window, WindowOptions};
 
-fn pixel_from_rgb(r: u8, g: u8, b: u8) -> u32 {
-    let (r, g, b) = (r as u32, g as u32, b as u32);
-    (r << 16) | (g << 8) | b
-}
-
 fn main() {
-    let mut buffer = Buffer::new(100, 100);
+    let mut buffer = Buffer::new(1000, 700);
 
     let mut window = Window::new(
         "Test - ESC to exit",

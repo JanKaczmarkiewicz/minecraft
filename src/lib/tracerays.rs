@@ -1,4 +1,4 @@
-use crate::{buffer::Buffer, objects::sphere::Sphere, ray::Ray};
+use crate::{buffer::Buffer, color::pixel_from_rgb, objects::sphere::Sphere, ray::Ray};
 use glam::{Vec3, vec3};
 
 fn perpendicular_plane(a: Vec3) -> (Vec3, Vec3) {
@@ -26,9 +26,18 @@ pub fn trace_rays(buffer: &mut Buffer, camera: Vec3, objects: &[Sphere]) {
             };
 
             for obj in objects {
-                if let Some(_) = obj.collision(&ray) {
-                    buffer.fill_pixel((i, j), 255);
-                }
+                let color = if let Some(_) = obj.collision(&ray) {
+                    255
+                } else {
+                    let unit_direction = ray.direction.normalize();
+                    let a = 0.5 * (unit_direction.y.clone() + 1.0);
+                    let white = vec3(255.0, 255.0, 255.0);
+                    let blue = vec3(100.0, 180.0, 255.0);
+                    let v = (1.0 - a) * white + a * blue;
+                    pixel_from_rgb(v.x as u8, v.y as u8, v.z as u8)
+                };
+
+                buffer.fill_pixel((i, j), color);
             }
         }
     }

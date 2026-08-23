@@ -1,6 +1,6 @@
 use glam::{Vec3, vec3};
 
-use crate::{buffer::Buffer, ray::Ray};
+use crate::{buffer::Buffer, color::pixel_from_rgb, ray::Ray};
 
 fn hit_sphere(center: Vec3, radius: f32, ray: Ray) -> bool {
     let oc = center - ray.origin;
@@ -40,16 +40,22 @@ pub fn run(buffer: &mut Buffer) -> Vec<Vec3> {
             let pixel_center =
                 pixel00_loc + (i as f32 * pixel_delta_u) + (j as f32 * pixel_delta_v);
             let ray_direction = pixel_center - camera_center;
+            let y = ray_direction.normalize();
             let ray = Ray {
                 origin: camera_center,
                 direction: ray_direction,
             };
-            rays.push(ray_direction);
+            // rays.push(ray_direction);
 
             let color = if hit_sphere(vec3(0.0, 0.0, -1.0), 0.5, ray) {
-                255
+                pixel_from_rgb(255, 0, 0)
             } else {
-                4000
+                // let unit_direction = ray.direction.normalize();
+                let a = 0.5 * (y.y.clone() + 1.0);
+                let white = vec3(255.0, 255.0, 255.0);
+                let blue = vec3(0.0, 0.0, 255.0);
+                let v = (1.0 - a) * white + a * blue;
+                pixel_from_rgb(v.x as u8, v.y as u8, v.z as u8)
             };
 
             buffer.fill_pixel((i, j), color);
