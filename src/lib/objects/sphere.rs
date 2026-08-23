@@ -11,17 +11,17 @@ impl Sphere {
     pub fn collision(
         &self,
         Ray {
-            origin: o,
             direction: d,
+            origin: o,
         }: &Ray,
     ) -> Option<f32> {
         let Self { center: c, radius } = self;
 
-        let a = d.x.powi(2) + d.y.powi(2) + d.z.powi(2);
-        let b = d.x * (o.x + c.x) + d.y * (o.y + c.y) + d.z * (o.z + c.z);
-        let c = o.x.powi(2) + c.x.powi(2) + o.y.powi(2) + c.y.powi(2) + o.z.powi(2) + c.z.powi(2)
-            - radius.powi(3);
-        let delta = b.powi(2) - 4.0 * a * c;
+        let oc = c - o;
+        let a = d.length_squared();
+        let b = -2.0 * d.dot(oc);
+        let c = oc.dot(oc) - radius * radius;
+        let delta = b * b - 4.0 * a * c;
 
         if delta < 0.0 {
             return None;
