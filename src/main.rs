@@ -28,11 +28,10 @@ fn main() {
     }];
 
     window.set_target_fps(3);
+    buffer.fill_all(0);
+    trace_rays(&mut buffer, camera, &objects);
 
     while window.is_open() && !window.is_key_down(Key::Escape) {
-        buffer.fill_all(0);
-        trace_rays(&mut buffer, camera, &objects);
-
         window
             .update_with_buffer(&buffer.buffer, buffer.width, buffer.height)
             .unwrap();

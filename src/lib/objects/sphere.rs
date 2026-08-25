@@ -19,20 +19,20 @@ impl Sphere {
 
         let oc = c - o;
         let a = d.length_squared();
-        let b = -2.0 * d.dot(oc);
-        let c = oc.dot(oc) - radius * radius;
-        let delta = b * b - 4.0 * a * c;
+        let h = d.dot(oc);
+        let c = oc.length_squared() - radius * radius;
+        let delta = h * h - a * c;
 
         if delta < 0.0 {
             return None;
         }
 
         if delta == 0.0 {
-            return Some(-b / (2.0 * a * c));
+            return Some(h / a);
         }
 
-        let t1 = (-b - delta.sqrt()) / (2.0 * a * c);
-        let t2 = (-b + delta.sqrt()) / (2.0 * a * c);
+        let t1 = (h - delta.sqrt()) / a;
+        let t2 = (h + delta.sqrt()) / a;
 
         let t = t1.max(t2);
 
