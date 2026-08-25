@@ -26,8 +26,10 @@ pub fn trace_rays(buffer: &mut Buffer, camera: Vec3, objects: &[Sphere]) {
             };
 
             for obj in objects {
-                let color = if let Some(_) = obj.collision(&ray) {
-                    255
+                let color = if let Some(t) = obj.collision(&ray) {
+                    let n =
+                        ((ray.at(t) - obj.center).normalize() + Vec3::ONE) * 0.5 * u8::MAX as f32;
+                    pixel_from_rgb(n.x as u8, n.y as u8, n.z as u8)
                 } else {
                     let unit_direction = ray.direction.normalize();
                     let a = 0.5 * (unit_direction.y.clone() + 1.0);

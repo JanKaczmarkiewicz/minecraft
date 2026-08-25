@@ -6,7 +6,7 @@ pub struct Ray {
 }
 
 impl Ray {
-    pub fn at(&self, t: i32) -> Vec3 {
-        self.origin + (self.direction) * t as f32
+    pub fn at(&self, t: f32) -> Vec3 {
+        self.origin + (self.direction) * t
     }
 }
