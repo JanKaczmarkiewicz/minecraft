@@ -8,7 +8,7 @@ fn hit_sphere(center: Vec3, radius: f32, ray: &Ray) -> f32 {
     let b = -2.0 * ray.direction.dot(oc);
     let c = oc.dot(oc) - radius * radius;
     let discriminant = b * b - 4.0 * a * c;
-    if (discriminant < 0.0) {
+    if discriminant < 0.0 {
         return -1.0;
     } else {
         return (-b - (discriminant).sqrt()) / (2.0 * a);
@@ -55,9 +55,9 @@ pub fn run(buffer: &mut Buffer) -> Vec<(f32, Vec3)> {
             let t = hit_sphere(vec3(0.0, 0.0, -1.0), 0.5, &ray);
 
             let color = if t > 0.0 {
-                let N = (ray.at(t) - vec3(0.0, 0.0, -1.0)).normalize();
-                ts.push((t, N));
-                0.5 * (N + Vec3::ONE)
+                let n = (ray.at(t) - vec3(0.0, 0.0, -1.0)).normalize();
+                ts.push((t, n));
+                0.5 * (n + Vec3::ONE)
             } else {
                 // let unit_direction = ray.direction.normalize();
                 let a = 0.5 * (y.y.clone() + 1.0);

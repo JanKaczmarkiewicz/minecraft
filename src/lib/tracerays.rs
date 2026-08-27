@@ -1,7 +1,7 @@
 use crate::{
     buffer::Buffer,
     color::pixel_from_rgb,
-    objects::{collection::Collection, hittable::Hittable},
+    objects::utils::{HittableList, first_hit},
     ray::Ray,
 };
 use glam::{Vec3, vec3};
@@ -14,7 +14,7 @@ fn perpendicular_plane(a: Vec3) -> (Vec3, Vec3) {
     (up, right)
 }
 
-pub fn trace_rays(buffer: &mut Buffer, camera: Vec3, world: &Collection) {
+pub fn trace_rays(buffer: &mut Buffer, camera: Vec3, world: &HittableList) {
     let viewport_height = 2.0;
     let pixel_size = viewport_height / buffer.height as f32;
 
@@ -30,9 +30,9 @@ pub fn trace_rays(buffer: &mut Buffer, camera: Vec3, world: &Collection) {
                 origin: vec3(0.0, 0.0, 0.0),
             };
 
-            let color = if let Some(rec) = world.hit(&ray) {
+            let color = if let Some((object, t)) = first_hit(world, &ray) {
                 // object hit normal
-                (rec.normal + Vec3::ONE) * 0.5
+                (object.normal(ray.at(t)) + Vec3::ONE) * 0.5
             } else {
                 // space
                 let a = 0.5 * (ray.direction.normalize().y + 1.0);

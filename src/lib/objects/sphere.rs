@@ -11,6 +11,10 @@ pub struct Sphere {
 }
 
 impl Hittable for Sphere {
+    fn normal(&self, at: Vec3) -> Vec3 {
+        (at - self.center) / self.radius
+    }
+
     fn hit(&self, ray: &Ray) -> Option<HitRecord> {
         let Self { center, radius: r } = self;
         let Ray {
@@ -33,13 +37,7 @@ impl Hittable for Sphere {
 
         for t in [t1, t2] {
             if t > 0.0 {
-                let p = ray.at(t);
-
-                return Some(HitRecord {
-                    t,
-                    p,
-                    normal: (p - center) / r, // TODO: look into possible normalization by dividing by r
-                });
+                return Some(t);
             }
         }
 
