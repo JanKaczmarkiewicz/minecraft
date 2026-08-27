@@ -1,4 +1,9 @@
-use crate::{buffer::Buffer, color::pixel_from_rgb, objects::sphere::Sphere, ray::Ray};
+use crate::{
+    buffer::Buffer,
+    color::pixel_from_rgb,
+    objects::{collection::Collection, hittable::Hittable},
+    ray::Ray,
+};
 use glam::{Vec3, vec3};
 
 fn perpendicular_plane(a: Vec3) -> (Vec3, Vec3) {
@@ -9,7 +14,7 @@ fn perpendicular_plane(a: Vec3) -> (Vec3, Vec3) {
     (up, right)
 }
 
-pub fn trace_rays(buffer: &mut Buffer, camera: Vec3, objects: &[Sphere]) {
+pub fn trace_rays(buffer: &mut Buffer, camera: Vec3, world: &Collection) {
     let viewport_height = 2.0;
     let pixel_size = viewport_height / buffer.height as f32;
 
@@ -25,22 +30,18 @@ pub fn trace_rays(buffer: &mut Buffer, camera: Vec3, objects: &[Sphere]) {
                 origin: vec3(0.0, 0.0, 0.0),
             };
 
-            for obj in objects {
-                let color = if let Some(t) = obj.collision(&ray) {
-                    let n =
-                        ((ray.at(t) - obj.center).normalize() + Vec3::ONE) * 0.5 * u8::MAX as f32;
-                    pixel_from_rgb(n.x as u8, n.y as u8, n.z as u8)
-                } else {
-                    let unit_direction = ray.direction.normalize();
-                    let a = 0.5 * (unit_direction.y.clone() + 1.0);
-                    let white = vec3(255.0, 255.0, 255.0);
-                    let blue = vec3(100.0, 180.0, 255.0);
-                    let v = (1.0 - a) * white + a * blue;
-                    pixel_from_rgb(v.x as u8, v.y as u8, v.z as u8)
-                };
+            let color = if let Some(rec) = world.hit(&ray) {
+                // object hit normal
+                (rec.normal + Vec3::ONE) * 0.5 * u8::MAX as f32
+            } else {
+                // space
+                let a = 0.5 * (ray.direction.normalize().y + 1.0);
+                let white = vec3(255.0, 255.0, 255.0);
+                let blue = vec3(100.0, 180.0, 255.0);
+                (1.0 - a) * white + a * blue
+            };
 
-                buffer.fill_pixel((i, j), color);
-            }
+            buffer.fill_pixel((i, j), pixel_from_rgb(color));
         }
     }
 }

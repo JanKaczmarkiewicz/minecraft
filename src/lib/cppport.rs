@@ -11,8 +11,7 @@ fn hit_sphere(center: Vec3, radius: f32, ray: Ray) -> bool {
     return discriminant >= 0.0;
 }
 
-pub fn run(buffer: &mut Buffer) -> Vec<Vec3> {
-    let mut rays = vec![];
+pub fn run(buffer: &mut Buffer) {
     let aspect_ratio = buffer.width as f32 / buffer.height as f32;
 
     let focal_length = 1.0;
@@ -48,19 +47,16 @@ pub fn run(buffer: &mut Buffer) -> Vec<Vec3> {
             // rays.push(ray_direction);
 
             let color = if hit_sphere(vec3(0.0, 0.0, -1.0), 0.5, ray) {
-                pixel_from_rgb(255, 0, 0)
+                vec3(255.0, 0.0, 0.0)
             } else {
                 // let unit_direction = ray.direction.normalize();
                 let a = 0.5 * (y.y.clone() + 1.0);
                 let white = vec3(255.0, 255.0, 255.0);
                 let blue = vec3(0.0, 0.0, 255.0);
-                let v = (1.0 - a) * white + a * blue;
-                pixel_from_rgb(v.x as u8, v.y as u8, v.z as u8)
+                (1.0 - a) * white + a * blue
             };
 
-            buffer.fill_pixel((i, j), color);
+            buffer.fill_pixel((i, j), pixel_from_rgb(color));
         }
     }
-
-    return rays;
 }
