@@ -12,16 +12,13 @@ pub struct Sphere {
 
 impl Hittable for Sphere {
     fn hit(&self, ray: &Ray) -> Option<HitRecord> {
-        let Self {
-            center: c,
-            radius: r,
-        } = self;
+        let Self { center, radius: r } = self;
         let Ray {
             direction: d,
             origin: o,
         }: &Ray = ray;
 
-        let oc = c - o;
+        let oc = center - o;
         let a = d.length_squared();
         let h = d.dot(oc);
         let c = oc.length_squared() - r * r;
@@ -41,7 +38,7 @@ impl Hittable for Sphere {
                 return Some(HitRecord {
                     t,
                     p,
-                    normal: (p - c).normalize(), // TODO: look into possible normalization by dividing by r
+                    normal: (p - center) / r, // TODO: look into possible normalization by dividing by r
                 });
             }
         }

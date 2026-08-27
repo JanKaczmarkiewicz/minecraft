@@ -32,12 +32,12 @@ pub fn trace_rays(buffer: &mut Buffer, camera: Vec3, world: &Collection) {
 
             let color = if let Some(rec) = world.hit(&ray) {
                 // object hit normal
-                (rec.normal + Vec3::ONE) * 0.5 * u8::MAX as f32
+                (rec.normal + Vec3::ONE) * 0.5
             } else {
                 // space
                 let a = 0.5 * (ray.direction.normalize().y + 1.0);
-                let white = vec3(255.0, 255.0, 255.0);
-                let blue = vec3(100.0, 180.0, 255.0);
+                let white = vec3(1.0, 1.0, 1.0);
+                let blue = vec3(0.5, 0.7, 1.0);
                 (1.0 - a) * white + a * blue
             };
 

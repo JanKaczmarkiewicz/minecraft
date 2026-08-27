@@ -2,6 +2,7 @@ use glam::Vec3;
 
 use crate::ray::Ray;
 
+#[derive(Clone, Debug)]
 pub struct HitRecord {
     pub t: f32,
     pub p: Vec3,

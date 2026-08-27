@@ -2,16 +2,22 @@ use glam::{Vec3, vec3};
 
 use crate::{buffer::Buffer, color::pixel_from_rgb, ray::Ray};
 
-fn hit_sphere(center: Vec3, radius: f32, ray: Ray) -> bool {
+fn hit_sphere(center: Vec3, radius: f32, ray: &Ray) -> f32 {
     let oc = center - ray.origin;
     let a = ray.direction.dot(ray.direction);
     let b = -2.0 * ray.direction.dot(oc);
     let c = oc.dot(oc) - radius * radius;
     let discriminant = b * b - 4.0 * a * c;
-    return discriminant >= 0.0;
+    if (discriminant < 0.0) {
+        return -1.0;
+    } else {
+        return (-b - (discriminant).sqrt()) / (2.0 * a);
+    }
 }
 
-pub fn run(buffer: &mut Buffer) {
+pub fn run(buffer: &mut Buffer) -> Vec<(f32, Vec3)> {
+    let mut ts = vec![];
+
     let aspect_ratio = buffer.width as f32 / buffer.height as f32;
 
     let focal_length = 1.0;
@@ -46,17 +52,23 @@ pub fn run(buffer: &mut Buffer) {
             };
             // rays.push(ray_direction);
 
-            let color = if hit_sphere(vec3(0.0, 0.0, -1.0), 0.5, ray) {
-                vec3(255.0, 0.0, 0.0)
+            let t = hit_sphere(vec3(0.0, 0.0, -1.0), 0.5, &ray);
+
+            let color = if t > 0.0 {
+                let N = (ray.at(t) - vec3(0.0, 0.0, -1.0)).normalize();
+                ts.push((t, N));
+                0.5 * (N + Vec3::ONE)
             } else {
                 // let unit_direction = ray.direction.normalize();
                 let a = 0.5 * (y.y.clone() + 1.0);
-                let white = vec3(255.0, 255.0, 255.0);
-                let blue = vec3(0.0, 0.0, 255.0);
+                let white = vec3(1.0, 1.0, 1.0);
+                let blue = vec3(0.5, 0.7, 1.0);
                 (1.0 - a) * white + a * blue
             };
 
             buffer.fill_pixel((i, j), pixel_from_rgb(color));
         }
     }
+
+    return ts;
 }

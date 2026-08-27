@@ -8,7 +8,11 @@ use lib::{
 use minifb::{Key, Window, WindowOptions};
 
 fn main() {
-    let mut buffer = Buffer::new(1000, 700);
+    let ratio = 16.0 / 9.0;
+    let width = 400;
+    let height = (width as f64 / ratio) as usize;
+
+    let mut buffer = Buffer::new(width, height);
 
     let mut window = Window::new(
         "Test - ESC to exit",
