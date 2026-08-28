@@ -11,3 +11,4 @@ path = "src/lib/mod.rs"
 [dependencies]
 minifb = "0.28"
 glam = "*"
+rand = "*"
